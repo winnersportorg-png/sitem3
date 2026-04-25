@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yalova.com</title>
+  <style>
+    :root{
+      --sky:#0284c7;--sky2:#0ea5e9;--bg:#f8fbff;--text:#0f172a;--muted:#64748b;
+      --border:#dbeafe;--card:#fff;--green:#16a34a;--red:#dc2626;--gray:#64748b;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:linear-gradient(to bottom,#eff6ff,#fff,#f8fafc);color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0;gap:16px}
+    .brand-title{font-size:22px;font-weight:800}.brand-sub{font-size:12px;color:var(--muted)}
+    .nav{display:flex;gap:24px}.nav a{font-size:14px;color:#475569}.nav a:hover{color:var(--sky)}
+    .btn{border:none;border-radius:999px;padding:12px 18px;font-weight:700;cursor:pointer;transition:.2s}
+    .btn-outline{background:#fff;border:1px solid #bae6fd;color:var(--sky)}
+    .btn-primary{background:var(--sky);color:#fff}
+    .btn-dark{background:#0f172a;color:#fff}
+    .hero-grid{display:grid;grid-template-columns:1.4fr .6fr;gap:16px;padding:24px 0}
+    .card{background:#fff;border:1px solid var(--border);border-radius:24px;box-shadow:0 10px 35px rgba(2,132,199,.08)}
+    .side-card{padding:20px}.side-card p{margin:0;color:var(--muted);font-size:14px}.side-card h3{margin:8px 0 0;font-size:20px}
+    .banner{position:relative;overflow:hidden;border-radius:24px;border:1px solid var(--border);background:#fff;box-shadow:0 18px 50px rgba(0,87,168,.12)}
+    .banner img{display:block;width:100%;height:auto}
+    .dots{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;display:flex;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+    .dot{width:10px;height:10px;border-radius:999px;border:none;background:rgba(255,255,255,.6);cursor:pointer}.dot.active{width:30px;background:#fff}
+    section{padding:26px 0}
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.22em;color:var(--sky);font-weight:700}
+    h2.sec{margin:8px 0 8px;font-size:34px;line-height:1.1}
+    .desc{max-width:700px;color:var(--muted);font-size:14px;line-height:1.7}
+    .grid-main{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+    .accordion{overflow:hidden}
+    .acc-head{display:flex;justify-content:space-between;align-items:center;padding:16px;gap:16px;cursor:pointer}
+    .acc-head:hover{background:#f0f9ff}
+    .acc-left{display:flex;align-items:center;gap:14px;min-width:0}
+    .photo-box{width:64px;height:64px;border-radius:18px;border:1px solid var(--border);background:linear-gradient(135deg,#e0f2fe,#f8fafc);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--sky);flex-shrink:0}
+    .acc-title{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .acc-meta{font-size:12px;color:var(--muted);margin-top:3px}
+    .acc-toggle{font-size:14px;font-weight:700;color:var(--sky);flex-shrink:0}
+    .acc-body{display:none;border-top:1px solid var(--border);padding:16px}
+    .acc-body.open{display:block}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+    .day{padding:10px;border-radius:14px;border:1px solid #bae6fd;background:#fff;color:var(--sky);font-size:14px;font-weight:700;cursor:pointer}
+    .day:hover{background:#f0f9ff}.day.active{background:var(--sky);color:#fff}.day.past{background:#f1f5f9;color:#94a3b8;text-decoration:line-through;cursor:not-allowed;border-color:#e2e8f0}
+    .slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+    .slot{padding:14px 10px;border-radius:18px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+    .slot.available{background:linear-gradient(135deg,#ecfdf5,#fff);border:1px solid #bbf7d0;color:#15803d;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+    .slot.available:hover{transform:translateY(-2px);background:#dcfce7}
+    .slot.full{background:linear-gradient(135deg,#fef2f2,#fff);border:1px solid #fecaca;color:#b91c1c}
+    .slot.closed{background:linear-gradient(135deg,#f1f5f9,#fff);border:1px solid #e2e8f0;color:#64748b}
+    .slot.selected{outline:3px solid rgba(2,132,199,.18)}
+    .panel{padding:24px;position:relative;overflow:hidden}
+    .panel::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;background:rgba(125,211,252,.25);filter:blur(28px);border-radius:999px}
+    .panel h3{margin:8px 0 0;font-size:28px}
+    .summary{margin-top:16px;padding:16px;border-radius:18px;border:1px solid var(--border);background:linear-gradient(135deg,#f0f9ff,#fff);position:relative;z-index:1}
+    .summary p{margin:6px 0;font-size:14px;color:#334155}.summary strong{display:block;color:#0f172a;font-size:16px}
+    .field{width:100%;padding:14px 16px;border-radius:18px;border:1px solid #bae6fd;font-size:14px;outline:none;position:relative;z-index:1}
+    .field:focus{border-color:var(--sky);box-shadow:0 0 0 4px rgba(14,165,233,.12)}
+    .panel .btn{width:100%;margin-top:10px;position:relative;z-index:1}.btn:disabled{opacity:.5;cursor:not-allowed}
+    .empty{text-align:center;color:var(--muted);padding:32px 0;position:relative;z-index:1}.empty .ball{font-size:44px;margin-bottom:8px}
+    .admin-login{min-height:100vh;background:#020617;color:#fff;padding:24px}.admin-box{max-width:420px;margin:80px auto 0}.glass{padding:24px;border-radius:24px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px)}
+    .admin-page{min-height:100vh;background:#f1f5f9;padding:24px}
+    .admin-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+    .admin-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px}
+    .helper{padding:24px}
+    .helper p{color:var(--muted);line-height:1.7;margin:10px 0}
+    footer{padding:24px 0 36px}
+    @media (max-width: 900px){.hero-grid,.grid-main,.admin-grid{grid-template-columns:1fr}.nav,.desktop-only{display:none}.days{grid-template-columns:repeat(2,minmax(0,1fr))}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}h2.sec{font-size:28px}}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const pitchData = [
+      { name: "FATİH HALISAHA", district: "Merkez", surface: "Açık • 7v7" },
+      { name: "ARENA 77 HALISAHA", district: "Merkez", surface: "Kapalı • 8v8" },
+      { name: "EFSANE HALISAHA", district: "Çiftlikköy", surface: "Açık • 7v7" },
+      { name: "KADIKÖY ARENA HALISAHA", district: "Kadıköy", surface: "Kapalı • 8v8" },
+      { name: "KAPTAN HALISAHA", district: "Merkez", surface: "Açık • 7v7" },
+      { name: "DOĞRUYOL HALISAHA", district: "Çınarcık", surface: "Açık • 7v7" },
+      { name: "90+4 HALISAHA", district: "Çiftlikköy", surface: "Kapalı • 8v8" },
+    ];
+    const realEstateData = [
+      { title: "Merkez’de Satılık 3+1 Daire", meta: "135 m² • 3+1 • Merkez" },
+      { title: "Çiftlikköy’de Kiralık Ofis", meta: "95 m² • Ofis • Çiftlikköy" },
+      { title: "Termal’de Satılık Arsa", meta: "420 m² • Arsa • Termal" },
+    ];
+    const whatsappNumbers = Object.fromEntries(pitchData.map((p) => [p.name, "905550000000"]));
+    const hours = [18,19,20,21,22,23,0];
+    const dayNames = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+    const banners = [
+      { src: 'banner1.jpg', alt: 'İDO Ege Adaları' },
+      { src: 'banner2.jpg', alt: 'İDO Kampanya' },
+    ];
+    const state = {
+      page: 'public',
+      adminLoggedIn: false,
+      slotStatus: Object.fromEntries(pitchData.map((p) => [p.name, {18:'available',19:'available',20:'available',21:'available',22:'available',23:'available',0:'available'}])),
+      openIndex: 0,
+      adminOpenIndex: 0,
+      selectedDate: {},
+      selectedWeek: {},
+      selectedSlot: null,
+      name: '',
+      phone: '',
+      submitted: '',
+      bannerIndex: 0,
+    };
+    function formatHour(h){ return String(h).padStart(2,'0') + ':00'; }
+    function getRange(h){ return `${formatHour(h)} - ${formatHour((h+1)%24)}`; }
+    function getDayLabel(pitch){ const idx=state.selectedDate[pitch]; if(idx===undefined)return ''; return dayNames[idx] + (state.selectedWeek[pitch]==='next' ? ' (Haftaya)' : ''); }
+    function cycleStatus(pitch,h){ const cur=state.slotStatus[pitch][h]; state.slotStatus[pitch][h]= cur==='available'?'full':cur==='full'?'closed':'available'; render(); }
+    function selectSlot(pitch,h){ if(state.selectedDate[pitch]===undefined) return; if(state.slotStatus[pitch][h] !== 'available') return; state.selectedSlot={pitch,hour:h}; state.name=''; state.phone=''; state.submitted=''; render(); }
+    function submitRequest(){ if(!state.selectedSlot) return; const clean=state.phone.replace(/\D/g,''); if(!state.name.trim()||clean.length<10) return; const msg=`Rezervasyon: ${state.selectedSlot.pitch} ${getDayLabel(state.selectedSlot.pitch)} ${getRange(state.selectedSlot.hour)} İsim:${state.name.trim()} Tel:${clean}`; state.submitted=`https://wa.me/${whatsappNumbers[state.selectedSlot.pitch]}?text=${encodeURIComponent(msg)}`; render(); }
+    function publicPage(){
+      const todayIndex = new Date().getDay();
+      return `
+      <div>
+        <header>
+          <div class="container header-inner">
+            <div><div class="brand-title">Yalova.com</div><div class="brand-sub">Şehrin dijital rehberi</div></div>
+            <nav class="nav desktop-only"><a href="#halisaha">Halı Saha</a><a href="#emlak">Emlak</a><a href="#iletisim">Bize Ulaşın</a></nav>
+            <div class="desktop-only" style="display:flex;gap:12px;align-items:center">
+              <button class="btn btn-outline">Reklam Ver</button>
+              <button class="btn btn-primary">Bize Ulaşın</button>
+              <button class="btn btn-outline" onclick="state.page='admin';render()">Admin</button>
+            </div>
+          </div>
+        </header>
+        <main>
+          <section class="container">
+            <div class="hero-grid">
+              <div class="banner">
+                <img src="${banners[state.bannerIndex].src}" alt="${banners[state.bannerIndex].alt}">
+                <div class="dots">${banners.map((b,i)=>`<button class="dot ${i===state.bannerIndex?'active':''}" onclick="state.bannerIndex=${i};render()"></button>`).join('')}</div>
+              </div>
+              <div style="display:grid;gap:16px">
+                <div class="card side-card"><div class="eyebrow">Öne Çıkan</div><h3>Emlak Vitrini</h3><p>Dikkat çekici ilan alanı burada yer alır.</p></div>
+                <div class="card side-card"><div class="eyebrow">Reklam</div><h3>İşletme Tanıtımı</h3><p>Yerel sponsor ve işletmeler için premium kutu.</p></div>
+              </div>
+            </div>
+          </section>
+          <section id="halisaha" class="container">
+            <div class="eyebrow">Rezervasyon</div>
+            <h2 class="sec">Halı Saha Rezervasyon</h2>
+            <div class="desc">Önce gün seç, sonra boş saatlerden birine bas. Kullanıcı tarafında yönetim araçları görünmez.</div>
+            <div class="grid-main">
+              <div>
+                ${pitchData.map((p,i)=>{
+                  const open = state.openIndex===i;
+                  return `<div class="card accordion">
+                    <div class="acc-head" onclick="state.openIndex=${open?'null':i};render()">
+                      <div class="acc-left"><div class="photo-box">Fotoğraf</div><div><div class="acc-title">${p.name}</div><div class="acc-meta">${p.district} • ${p.surface}</div></div></div>
+                      <div class="acc-toggle">${open?'Kapat':'Saatleri Gör'}</div>
+                    </div>
+                    <div class="acc-body ${open?'open':''}">
+                      <div class="toolbar">
+                        <label style="font-size:14px;font-weight:700;color:#334155">Gün seç</label>
+                        <button class="btn ${state.selectedWeek[p.name]==='next'?'btn-primary':'btn-outline'}" style="padding:8px 12px;font-size:12px" onclick="event.stopPropagation(); state.selectedWeek['${p.name}']=state.selectedWeek['${p.name}']==='next'?'current':'next'; render();">${state.selectedWeek[p.name]==='next'?'Bu Haftaya Dön':'Önümüzdeki Hafta'}</button>
+                      </div>
+                      <div class="days">${dayNames.map((d,idx)=>{
+                        const next = state.selectedWeek[p.name]==='next';
+                        const past = !next && idx < todayIndex;
+                        const active = state.selectedDate[p.name]===idx;
+                        return `<button class="day ${past?'past':''} ${active?'active':''}" ${past?'disabled':''} onclick="event.stopPropagation(); state.selectedDate['${p.name}']=${idx}; render();">${d}</button>`;
+                      }).join('')}</div>
+                      <div class="slots">${hours.map(h=>{
+                        const st = state.slotStatus[p.name][h];
+                        const selected = state.selectedSlot && state.selectedSlot.pitch===p.name && state.selectedSlot.hour===h;
+                        return `<button class="slot ${st} ${selected?'selected':''}" onclick="event.stopPropagation(); selectSlot('${p.name}', ${h})">${getRange(h)}</button>`;
+                      }).join('')}</div>
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+              <div>
+                <div class="card panel">
+                  <div class="eyebrow">Talep oluştur</div>
+                  <h3>Rezervasyon isteği</h3>
+                  ${state.selectedSlot ? `
+                    <div class="summary">
+                      <strong>${state.selectedSlot.pitch}</strong>
+                      <p>Gün: ${getDayLabel(state.selectedSlot.pitch)}</p>
+                      <p>Saat: ${getRange(state.selectedSlot.hour)}</p>
+                    </div>
+                    <div style="margin-top:16px;display:grid;gap:12px">
+                      <input class="field" placeholder="Ad Soyad" value="${state.name.replace(/"/g,'&quot;')}" oninput="state.name=this.value">
+                      <input class="field" placeholder="Telefon numaran" value="${state.phone.replace(/"/g,'&quot;')}" oninput="state.phone=this.value">
+                      <button class="btn btn-primary" ${(!state.name.trim() || state.phone.replace(/\D/g,'').length<10)?'disabled':''} onclick="submitRequest()">Talep Oluştur</button>
+                      ${state.submitted ? `<a class="btn" style="display:block;text-align:center;background:#16a34a;color:#fff" href="${state.submitted}" target="_blank">WhatsApp’ta Gönder</a>`:''}
+                    </div>` : `<div class="empty"><div class="ball">⚽</div>Bir saha seç, gün ve saat belirle</div>`}
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="emlak" class="container">
+            <div class="eyebrow">Emlak vitrini</div>
+            <h2 class="sec">Yalova Emlak Bölümü</h2>
+            <div class="desc">Şimdilik sade tutulan emlak alanı. Sonraki adımda bunu da ayrı ayrı geliştireceğiz.</div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">${realEstateData.map(item=>`<div class="card" style="overflow:hidden"><div style="height:160px;background:linear-gradient(135deg,#e0f2fe,#bfdbfe,#fff)"></div><div style="padding:20px"><div style="font-size:18px;font-weight:800">${item.title}</div><div style="margin-top:8px;font-size:14px;color:#64748b">${item.meta}</div><button class="btn btn-outline" style="margin-top:16px">İlanı İncele</button></div></div>`).join('')}</div>
+          </section>
+          <section id="iletisim" class="container">
+            <div class="card" style="overflow:hidden">
+              <div style="display:grid;grid-template-columns:1fr .8fr">
+                <div style="background:#020617;color:#fff;padding:32px 40px">
+                  <span style="display:inline-flex;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);font-size:12px;font-weight:700;color:#bae6fd">Editör kontrollü sistem</span>
+                  <h2 style="margin:16px 0 0;font-size:40px;line-height:1.1">Reklam, emlak veya rezervasyon talepleri için bizimle iletişime geçin</h2>
+                  <p style="margin-top:16px;max-width:680px;color:rgba(255,255,255,.75);line-height:1.7">Tüm içerikler ve talepler yönetim kontrolünde yayınlanır. İletişimden gelen başvurular ekip tarafından değerlendirilir.</p>
+                </div>
+                <div style="padding:32px 40px;background:#fff"><div style="display:grid;gap:16px;color:#475569;font-size:14px;line-height:1.7"><p>• WhatsApp İletişim: 0555 000 00 00</p><p>• E-posta: iletisim@yalova.com</p><p>• Halı saha saatleri ve rezervasyon akışı ekip tarafından yönetilir.</p></div></div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>`;
+    }
+    function adminPage(){
+      if(!state.adminLoggedIn){
+        return `<div class="admin-login"><div class="admin-box"><h1 style="font-size:42px;margin:0 0 8px;font-weight:900">Admin Girişi</h1><p style="color:rgba(255,255,255,.7);margin:0 0 20px">Bu alan sadece yönetim ekibi içindir.</p><div class="glass"><input class="field" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);color:#fff" type="password" placeholder="Yönetici şifresi" oninput="state.password=this.value"><div style="display:grid;gap:12px;margin-top:12px"><button class="btn" style="background:#fff;color:#0f172a" onclick="if(state.password==='1234'){state.adminLoggedIn=true;render()} state.password=''">Giriş Yap</button><button class="btn" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.15)" onclick="state.page='public';render()">Kullanıcı Sayfasına Dön</button></div></div></div></div>`;
+      }
+      return `<div class="admin-page"><div class="container"><div class="admin-top"><div><div class="eyebrow">Yönetim</div><h2 class="sec" style="margin-top:8px">Halı Saha Admin Paneli</h2><div class="desc">Saat kutularına basarak boş, dolu ve kapalı durumlarını ayarlayabilirsiniz.</div></div><button class="btn btn-outline" onclick="state.page='public';render()">Kullanıcı Sayfasına Dön</button></div><div class="admin-grid"><div>${pitchData.map((p,i)=>{const open=state.adminOpenIndex===i;return `<div class="card accordion"><div class="acc-head" onclick="state.adminOpenIndex=${open?'null':i};render()"><div><div class="acc-title">${p.name}</div><div class="acc-meta">${p.district} • ${p.surface}</div></div><div class="acc-toggle">${open?'Kapat':'Düzenle'}</div></div>${open?`<div class="acc-body open"><div class="slots">${hours.map(h=>`<button class="slot ${state.slotStatus[p.name][h]}" onclick="event.stopPropagation(); cycleStatus('${p.name}', ${h})">${getRange(h)}</button>`).join('')}</div></div>`:''}</div>`}).join('')}</div><div class="card helper"><div class="eyebrow">Panel Mantığı</div><p>• Yeşil: Kullanıcı seçebilir.</p><p>• Kırmızı: Saat dolu görünür.</p><p>• Gri: Saat kapalı görünür.</p><p>• Kullanıcı sayfasında bu panel asla görünmez.</p></div></div></div></div>`;
+    }
+    function render(){ document.getElementById('app').innerHTML = state.page==='admin' ? adminPage() : publicPage(); }
+    render();
+    setInterval(()=>{ if(state.page==='public'){ state.bannerIndex = (state.bannerIndex+1)%banners.length; render(); } }, 4000);
+  </script>
+</body>
+</html>
